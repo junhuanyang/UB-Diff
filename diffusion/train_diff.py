@@ -31,18 +31,20 @@ def parse_args():
     parser.add_argument('-ns', '--num_steps', default=150000, type=int, help='number of training steps')
     parser.add_argument('-sse', '--save_and_sample_every', default=30000, type=int, help='save and sample every')
     parser.add_argument('-rf', '--results_folder', default='./checkpoints', type=str, help='results folder')
-    
+    parser.add_argument('use_wandb', default=False, type=bool)
+
     args = parser.parse_args()
     return args
 
 if __name__ == '__main__':
     setup_seed(0)
     args = parse_args()
-    wandb.init(
-    # set the wandb project where this run will be logged
-        project= args.project,
-        name = args.proj_name,
-    )
+    if args.use_wandb:
+        wandb.init(
+        # set the wandb project where this run will be logged
+            project= args.project,
+            name = args.proj_name,
+        )
     
     model = UB_Diff(
         1, 
@@ -50,7 +52,8 @@ if __name__ == '__main__':
         checkpoint_path = args.checkpoint_path, 
         dim_mults=(1,2,2,4),
         objective = 'pred_v', # or 'pred_noise' or 'pred_x0'
-        dim5 = 128
+        dim5 = 128,
+        use_wandb = args.use_wandb
         )
     
     trainer = Trainer1D(

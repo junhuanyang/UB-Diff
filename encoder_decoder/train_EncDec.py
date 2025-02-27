@@ -28,7 +28,7 @@ def parse_args():
     parser.add_argument('-fs', '--file-size', default=None, type=int, help='number of samples in each npy file')
     parser.add_argument('--proj_name', default='UB_Diff_flatvel-a', type=str, help='wandb project name')
     
-    parser.add_argument('-o', '--output-path',default='./checkpoints', help='path to parent folder to save checkpoints')
+    parser.add_argument('-o', '--output-path',default='./checkpoints', help='path to save checkpoints')
     parser.add_argument('--num_data', default=24000, type=int, help='number of velocity maps')
     parser.add_argument('--paired_num', default=5000, type=int, help='number of seismic data')
     parser.add_argument('-n', '--save-name', default='24k_v_5k_p', help='folder name for this experiment')
@@ -38,7 +38,7 @@ def parse_args():
     parser.add_argument('-l', '--log-path', default='./log', help='path to parent folder to save logs')
     parser.add_argument('-s', '--suffix', type=str, default=None, help='subfolder name for this run')
     parser.add_argument('-td', '--train-data', default='./seismic_data/', help='training seismic data path')
-    parser.add_argument('-tl', '--train-label', default='./velocity_map/', help='training velocity map path')
+    parser.add_argument('-tl', '--train-label', default='./velocity_map/',help='training velocity map path')
     
     # Model related
     parser.add_argument('-ss', '--sample-spatial', type=float, default=1.0, help='spatial sampling ratio')
@@ -59,7 +59,7 @@ def parse_args():
     parser.add_argument('-r', '--resume', default=None, help='resume from checkpoint')
     parser.add_argument('--start-epoch', default=0, type=int, help='start epoch')
     parser.add_argument('--val_every', default=20, type=int)
-    
+    parser.add_argument('use_wandb', default=False, type=bool)
 
     # Loss related
     parser.add_argument('-g1v', '--lambda_g1v', type=float, default=1.0)
@@ -144,8 +144,8 @@ def train_one_epoch(model, criterion, optimizer, lr_scheduler,
         metric_logger.update(loss=loss_val, loss_s=loss_s_val,
             loss_v=loss_v_val, lr=optimizer.param_groups[0]['lr'])
         metric_logger.meters['samples/s'].update(batch_size / (time.time() - start_time))
-
-        wandb.log({"loss": loss_val,"loss_s": loss_s_val, 'loss_v': loss_v_val})
+        if args.use_wandb:
+            wandb.log({"loss": loss_val,"loss_s": loss_s_val, 'loss_v': loss_v_val})
 
         step += 1
         lr_scheduler.step()
@@ -200,8 +200,9 @@ def evaluate(model, criterion, dataloader, device, ctx, args, epoch):
     # Gather the statTotal time:s from all processes
     metric_logger.synchronize_between_processes()
     print(' * Loss {loss.global_avg:.8f}\n'.format(loss=metric_logger.loss))
-
-    wandb.log({"test loss": metric_logger.loss.global_avg,
+    
+    if args.use_wandb:
+        wandb.log({"test loss": metric_logger.loss.global_avg,
                "test loss_s": metric_logger.loss_s.global_avg, 
                'test loss_v': metric_logger.loss_v.global_avg})
 
@@ -221,12 +222,12 @@ def main(args):
     print('torchvision version: ', torchvision.__version__)
 
     utils.mkdir(args.output_path)  # create folder to store checkpoints
-
-    wandb.init(
-        # set the wandb project where this run will be logged
-        project= args.proj_name,
-        name = args.save_name,
-    )
+    if args.use_wandb:
+        wandb.init(
+            # set the wandb project where this run will be logged
+            project= args.proj_name,
+            name = args.save_name,
+        )
 
     device = torch.device(args.device)
     torch.backends.cudnn.benchmark = True

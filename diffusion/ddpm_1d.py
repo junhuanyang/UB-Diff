@@ -419,13 +419,16 @@ class GaussianDiffusion1D(nn.Module):
         # beta_schedule = 'cosine',
         ddim_sampling_eta = 0.,
         auto_normalize = False,
-        time_scale = 1
+        time_scale = 1,
+        use_wandb = False
     ):
         super().__init__()
         self.model = model
         self.channels = self.model.channels
         self.self_condition = self.model.self_condition
         self.time_scale= time_scale
+
+        self.use_wandb = use_wandb  
 
         self.seq_length = seq_length
 
@@ -697,8 +700,9 @@ class GaussianDiffusion1D(nn.Module):
         loss = reduce(loss, 'b ... -> b (...)', 'mean')
 
         loss = loss * extract(self.loss_weight, t, loss.shape)
-
-        wandb.log({"total loss": loss.mean().item()})
+        
+        if self.use_wandb:
+            wandb.log({"total loss": loss.mean().item()})
         
         return loss.mean()
 

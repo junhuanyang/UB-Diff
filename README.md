@@ -41,7 +41,7 @@ cd encoder_decoder
 python train_EncDec.py 
 ```
 Use the '--dataset' to change the dataset name, '--train_data' to set the path of seismic data, 'train_label' to set the path of velocity map,
-'--num_data' to set the training velocity map size, '--paired_num' to set the paired data size, '--fault_fam' to indicate if the dataset is in fault family, '--epoch_block' and '--val_every' to set the epochs and frequency to save checkpoint ('20' used in our experiment).
+'--num_data' to set the training velocity map size (since each file of this dataset has 500 smaples, thus the number should be less than the number of files * 500), '--paired_num' to set the paired data size (should less than the number of data), '--fault_fam' to indicate if the dataset is in fault family, '--epoch_block' and '--val_every' to set the epochs and frequency to save checkpoint ('20' used in our experiment).
 
 
 

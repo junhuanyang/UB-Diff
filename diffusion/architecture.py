@@ -12,7 +12,7 @@ from ddpm_1d import cosine_beta_schedule
 
 
 class UB_Diff(nn.Module):
-    def __init__(self, in_channels, num_samples = 16, checkpoint_path = None, dim_mults = (1, 2, 2, 2), time_scale = 1, objective = 'pred_v', time_steps = 256, dim5 = 512):
+    def __init__(self, in_channels, num_samples = 16, checkpoint_path = None, dim_mults = (1, 2, 2, 2), time_scale = 1, objective = 'pred_v', time_steps = 256, dim5 = 512, use_wandb = False):
         super(UB_Diff, self).__init__()
         self.in_channels = in_channels
         self.dim5 = dim5
@@ -20,7 +20,7 @@ class UB_Diff(nn.Module):
 
         self.unet = Unet1D(dim = self.encoder.dim5, channels = 1, dim_mults=dim_mults)
         betas = cosine_beta_schedule(timesteps=time_steps)
-        self.diffusion = GaussianDiffusion1DDefault(model=self.unet, seq_length=self.encoder.dim5, betas=betas,time_scale = time_scale, objective = objective)
+        self.diffusion = GaussianDiffusion1DDefault(model=self.unet, seq_length=self.encoder.dim5, betas=betas,time_scale = time_scale, objective = objective, use_wandb=use_wandb)
 
         self.load_decoder(checkpoint_path)
         self.leaky_relu = nn.LeakyReLU(0.2)
