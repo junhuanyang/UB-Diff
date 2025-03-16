@@ -104,7 +104,7 @@ def train_one_epoch(model, criterion, optimizer, lr_scheduler,
     metric_logger = utils.MetricLogger(delimiter='  ')
     metric_logger.add_meter('lr', utils.SmoothedValue(window_size=1, fmt='{value}'))
     metric_logger.add_meter('samples/s', utils.SmoothedValue(window_size=10, fmt='{value:.3f}'))
-    header = 'Epoch: [{}]'.format(epoch)
+    header = 'Epoch: [{}]'.format(epoch + 1)
 
     flag =True
     for data, label in metric_logger.log_every(dataloader, print_freq, header):
