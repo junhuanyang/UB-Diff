@@ -53,7 +53,7 @@ good latent representataion. Run:
 ```bash
 python fine_tune_Dec_S.py
 ```
-Use the '--dataset' to change the dataset, '--train_data' to set the path of seismic data, 'train_label' to set the path of velocity map,'--num_data' to set the training velocity map size, '--paired_num' to set the paired data size, '--fault_fam' to indicate if the dataset is in fault family, '--epoch_block' and '--val_every' to set the epochs and frequency to save checkpoint ('10' used in our experiment).
+Use the '--dataset' to change the dataset, '--train-data' to set the path of seismic data, 'train-label' to set the path of velocity map,'--num_data' to set the training velocity map size, '--paired_num' to set the paired data size, '--fault_fam' to indicate if the dataset is in fault family, '--epoch_block' and '--val_every' to set the epochs and frequency to save checkpoint ('10' used in our experiment).
 
 
 ### Diffusion training
