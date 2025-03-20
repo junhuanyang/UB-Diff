@@ -59,7 +59,7 @@ def parse_args():
     parser.add_argument('-r', '--resume', default='check_point.pth', help='resume from checkpoint')
     parser.add_argument('--start-epoch', default=0, type=int, help='start epoch')
     parser.add_argument('--val_every', default=20, type=int)
-    parser.add_argument('--use_wandb', default=False, type=bool)
+    parser.add_argument('--use_wandb', action='store_true', help='Enable wandb logging')
     parser.add_argument('-g1v', '--lambda_g1v', type=float, default=1.0)
     parser.add_argument('-g2v', '--lambda_g2v', type=float, default=1.0)
     parser.add_argument('-ls', '--lambda_s', type=float, default=1.0)
