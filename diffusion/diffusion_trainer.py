@@ -194,7 +194,7 @@ class Trainer1D(object):
 
         if exists(self.accelerator.scaler) and exists(data['scaler']):
             self.accelerator.scaler.load_state_dict(data['scaler'])
-    def save_image(self, images, s_path, v_path, milestone, idx):
+    def save_image(self, images, s_path, v_path, milestone, idx=0): #0 means during training
         v, s = self.model.decode(images)
 
         all_v = Tr.minmax_denormalize(v, self.ctx['label_min'], self.ctx['label_max'])
