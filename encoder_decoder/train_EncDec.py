@@ -32,7 +32,6 @@ def parse_args():
     parser.add_argument('--paired_num', default=5000, type=int, help='number of seismic data')
     parser.add_argument('-n', '--save-name', default='24k_v_5k_p', help='folder name for this experiment')
     parser.add_argument('--dim5', default=128, help='latent dimension')
-    parser.add_argument('--fault_fam', action='store_true', help='Disable fault family dataset')
     # Path related    
     parser.add_argument('-l', '--log-path', default='./log', help='path to parent folder to save logs')
     parser.add_argument('-s', '--suffix', type=str, default=None, help='subfolder name for this run')
@@ -254,7 +253,11 @@ def main(args):
     ])
 
     #create dataset
-    train_dataset = S_dataset(args.train_data, args.train_label,transform_data, transform_label, pre_load=True, fault_fam=args.fault_fam)
+    if args.dataset not in ['flatfault-a', 'curvefault-a', 'flatfault-b', 'curvefault-b']:
+        fault_fam = False
+    else:
+        fault_fam = True
+    train_dataset = S_dataset(args.train_data, args.train_label,transform_data, transform_label, pre_load=True, fault_fam=fault_fam)
     train_size = args.num_data
     paired_size = args.paired_num
     

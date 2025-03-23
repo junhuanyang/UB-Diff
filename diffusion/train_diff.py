@@ -21,7 +21,7 @@ def parse_args():
     parser.add_argument('-n', '--num_samples', default=500, type=int, help='number of samples')
     parser.add_argument('-b', '--batch_size', default=16, type=int, help='batch size')
     parser.add_argument('-p', '--project', default='FVA', type=str, help='wandb project name')
-    parser.add_argument('-pn', '--proj_name', default='5kFT_Data_train', type=str, help='wandb run name')
+    parser.add_argument('-pn', '--proj_name', default='UB_Diff_FVA', type=str, help='wandb run name')
     parser.add_argument('-td', '--train_data', default='./seismic_data/', type=str, help='train data path')
     parser.add_argument('-tl', '--train_label', default='./velocity_map/', type=str, help='train label path')
     parser.add_argument('-da', '--dataset', default='flatvel-a', type=str, help='dataset name')
@@ -31,7 +31,7 @@ def parse_args():
     parser.add_argument('-ns', '--num_steps', default=150000, type=int, help='number of training steps')
     parser.add_argument('-sse', '--save_and_sample_every', default=30000, type=int, help='save and sample every')
     parser.add_argument('-rf', '--results_folder', default='./checkpoints', type=str, help='results folder')
-    parser.add_argument('use_wandb', default=False, type=bool)
+    parser.add_argument('--use_wandb', action='store_true', help='Enable wandb logging')
 
     args = parser.parse_args()
     return args
